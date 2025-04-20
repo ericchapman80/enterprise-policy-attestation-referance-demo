@@ -1,0 +1,59 @@
+{
+  "branches": [
+    "main"
+  ],
+  "preset": "conventionalcommits",
+  "tagFormat": "v${version}",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "package.json"
+        ]
+      }
+    ],
+    "@semantic-release/github",
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": true,
+        "pkgRoot": "packages/backstage-plugin-backend-module-autogov-processor",
+        "registry": "https://registry.npmjs.org/"
+      }
+    ],
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": true,
+        "pkgRoot": "packages/backstage-plugin-autogov-status-catalog-column",
+        "registry": "https://registry.npmjs.org/"
+      }
+    ],
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": true,
+        "pkgRoot": "packages/backstage-plugin-autogov-releases-backend",
+        "registry": "https://registry.npmjs.org/"
+      }
+    ],
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": true,
+        "pkgRoot": "packages/backstage-plugin-autogov-releases-card",
+        "registry": "https://registry.npmjs.org/"
+      }
+    ]
+  ]
+}
