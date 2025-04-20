@@ -1,0 +1,101 @@
+import { render, screen, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { BrowserRouter } from 'react-router-dom';
+import ProductDetail from './ProductDetail';
+import * as productsApi from '../api/products';
+
+jest.mock('../api/products', () => ({
+  getProductById: jest.fn(),
+}));
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: () => ({ productId: '123' }),
+}));
+
+describe('ProductDetail', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('renders loading state initially', () => {
+    jest.spyOn(productsApi, 'getProductById').mockImplementation(() => new Promise(() => {}));
+
+    render(
+      <BrowserRouter>
+        <ProductDetail />
+      </BrowserRouter>
+    );
+
+    const skeletons = document.querySelectorAll('.animate-pulse');
+    expect(skeletons.length).toBeGreaterThan(0);
+  });
+
+  test('renders product details when data is loaded', async () => {
+    const mockProduct = {
+      id: '123',
+      name: 'Test Product',
+      description: 'This is a test product description',
+      brand: 'Test Brand',
+      category: 'Test Category',
+      price: 99.99,
+      average_rating: 4.5,
+      review_count: 10,
+      images: [
+        { id: 'img1', url: 'test.jpg', alt_text: 'Test Image', is_primary: true },
+        { id: 'img2', url: 'test2.jpg', alt_text: 'Test Image 2', is_primary: false }
+      ],
+      variants: [
+        { 
+          id: 'var1', 
+          name: 'Test Variant', 
+          sku: 'TEST-SKU', 
+          price: 99.99, 
+          inventory_count: 10,
+          color: 'Red',
+          size: 'Medium'
+        }
+      ],
+      reviews: [
+        {
+          id: 'rev1',
+          user_name: 'Test User',
+          rating: 5,
+          comment: 'Great product!',
+          created_at: '2023-01-01T00:00:00Z'
+        }
+      ],
+      created_at: '2023-01-01T00:00:00Z',
+      updated_at: '2023-01-01T00:00:00Z'
+    };
+
+    jest.spyOn(productsApi, 'getProductById').mockResolvedValue(mockProduct);
+
+    render(
+      <BrowserRouter>
+        <ProductDetail />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Product')).toBeInTheDocument();
+      expect(screen.getAllByText('This is a test product description')[0]).toBeInTheDocument();
+      expect(screen.getByText('Test Brand')).toBeInTheDocument();
+      expect(screen.getByText('$99.99')).toBeInTheDocument();
+    });
+  });
+
+  test('renders error message when product is not found', async () => {
+    jest.spyOn(productsApi, 'getProductById').mockResolvedValue(null);
+
+    render(
+      <BrowserRouter>
+        <ProductDetail />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Product not found')).toBeInTheDocument();
+    });
+  });
+});

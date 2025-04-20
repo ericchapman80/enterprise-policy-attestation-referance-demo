@@ -1,0 +1,48 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: governance-policy-tiers
+  namespace: governance-system
+data:
+  policy.yaml: |
+    tiers:
+      - tier: 0
+        environments: ["PROD"]
+        rules:
+          minCodeCoverage: 90
+          maxCriticalVulnerabilities: 0
+          maxHighVulnerabilities: 0
+          requiresBuildProvenance: true
+          requiresSBOM: true
+          requiresSecurityScan: true
+          
+      - tier: 1
+        environments: ["QA"]
+        rules:
+          minCodeCoverage: 85
+          maxCriticalVulnerabilities: 0
+          maxHighVulnerabilities: 2
+          requiresBuildProvenance: true
+          requiresSBOM: true
+          requiresSecurityScan: true
+          
+      - tier: 2
+        environments: ["DEV"]
+        rules:
+          minCodeCoverage: 80
+          maxCriticalVulnerabilities: 0
+          maxHighVulnerabilities: 5
+          requiresBuildProvenance: true
+          requiresSBOM: false
+          requiresSecurityScan: true
+          
+      - tier: 3
+        environments: ["DEV-TEST"]
+        rules:
+          minCodeCoverage: 70
+          maxCriticalVulnerabilities: 1
+          maxHighVulnerabilities: 10
+          requiresBuildProvenance: false
+          requiresSBOM: false
+          requiresSecurityScan: true

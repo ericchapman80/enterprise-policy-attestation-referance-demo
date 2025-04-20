@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app
+  namespace: test-app-DEV
+  annotations:
+    governance.io/code-coverage: "82"
+    governance.io/critical-vulnerabilities: "0"
+    governance.io/high-vulnerabilities: "3"
+    governance.io/build-provenance: "verified"
+    governance.io/security-scan: "verified"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - name: test-app
+        image: nginx:latest
+        ports:
+        - containerPort: 80

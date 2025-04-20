@@ -1,0 +1,85 @@
+name: Build Provenance Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+permissions:
+  id-token: write
+  attestations: write
+  packages: write
+  contents: write
+
+jobs:
+  validate-build-provenance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@main
+
+      - name: Build and push frontend image
+        id: build-frontend
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend/frontend-app
+          push: false
+          tags: frontend:latest
+          outputs: type=docker,dest=/tmp/frontend.tar
+          provenance: true
+          sbom: true
+
+      - name: Build and push backend image
+        id: build-backend
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend/backend-api
+          push: false
+          tags: backend:latest
+          outputs: type=docker,dest=/tmp/backend.tar
+          provenance: true
+          sbom: true
+
+      # Validate build provenance from trusted internal source
+      - name: Validate build provenance
+        run: |
+          # Example of validating build provenance from trusted internal source
+          # In a real implementation, this would validate against your organization's trusted registry
+          echo "Validating build provenance from trusted internal source"
+          
+          # Example of checking if the build was performed by a trusted builder
+          TRUSTED_BUILDER="https://github.com/actions/runner"
+          FRONTEND_BUILDER=$(cosign verify-attestation --key internal-trusted-key.pem /tmp/frontend.tar | jq -r '.builder.id')
+          BACKEND_BUILDER=$(cosign verify-attestation --key internal-trusted-key.pem /tmp/backend.tar | jq -r '.builder.id')
+          
+          if [[ "$FRONTEND_BUILDER" == "$TRUSTED_BUILDER"* ]] && [[ "$BACKEND_BUILDER" == "$TRUSTED_BUILDER"* ]]; then
+            echo "Build provenance validated successfully"
+          else
+            echo "Build provenance validation failed - not from trusted internal source"
+            exit 1
+          fi
+        env:
+          COSIGN_EXPERIMENTAL: 1
+
+      - name: Upload attestations
+        uses: actions/upload-artifact@v3
+        with:
+          name: attestations
+          path: |
+            sbom.spdx.json
+            /tmp/frontend.tar.att
+            /tmp/backend.tar.att
