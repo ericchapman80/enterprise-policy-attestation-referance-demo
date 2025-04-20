@@ -36,16 +36,16 @@ The application follows a microservice architecture pattern:
         │                        │
         │                        │
         ▼                        ▼
-┌─────────────────────────────────────────┐
-│                                         │
-│        GitHub Actions Workflows         │
-│                                         │
-│  ┌─────────┐ ┌────────┐ ┌───────────┐  │
-│  │ Build   │ │Security│ │ Testing   │  │
-│  │ Checks  │ │ Scans  │ │ Coverage  │  │
-│  └─────────┘ └────────┘ └───────────┘  │
-│                                         │
-└─────────────────────────────────────────┘
+┌───────────────────────────────────┐
+│                                   │
+│      GitHub Actions Workflows     │
+│                                   │
+│  ┌─────────┐ ┌────────┐ ┌─────┐  │
+│  │ Build   │ │Security│ │Tests│  │
+│  │ Checks  │ │ Scans  │ │     │  │
+│  └─────────┘ └────────┘ └─────┘  │
+│                                   │
+└───────────────────────────────────┘
 ```
 
 ## Project Structure
