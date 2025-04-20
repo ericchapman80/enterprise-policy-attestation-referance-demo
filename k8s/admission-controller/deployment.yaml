@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: governance-validator
+  namespace: governance-system
+  labels:
+    app: governance-validator
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: governance-validator
+  template:
+    metadata:
+      labels:
+        app: governance-validator
+    spec:
+      containers:
+      - name: validator
+        image: ${REGISTRY}/governance-validator:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443
+          name: https
+        volumeMounts:
+        - name: webhook-certs
+          mountPath: /etc/webhook/certs
+          readOnly: true
+        - name: policy-config
+          mountPath: /etc/governance/policy
+          readOnly: true
+        env:
+        - name: POLICY_FILE
+          value: "/etc/governance/policy/policy.yaml"
+      volumes:
+      - name: webhook-certs
+        secret:
+          secretName: governance-validator-certs
+      - name: policy-config
+        configMap:
+          name: governance-policy-tiers

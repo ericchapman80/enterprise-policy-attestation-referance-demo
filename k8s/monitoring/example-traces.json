@@ -1,0 +1,181 @@
+{
+  "resourceSpans": [
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "governance-validator"
+            }
+          }
+        ]
+      },
+      "scopeSpans": [
+        {
+          "scope": {
+            "name": "governance-validator"
+          },
+          "spans": [
+            {
+              "traceId": "0af7651916cd43dd8448eb211c80319c",
+              "spanId": "b7ad6b7169203331",
+              "name": "handleValidate",
+              "kind": 1,
+              "startTimeUnixNano": "1650000000000000000",
+              "endTimeUnixNano": "1650000000100000000",
+              "attributes": [
+                {
+                  "key": "request.uid",
+                  "value": {
+                    "stringValue": "5b7c7e0a-8c0a-11ec-a8a3-0242ac120002"
+                  }
+                },
+                {
+                  "key": "request.namespace",
+                  "value": {
+                    "stringValue": "test-app-DEV"
+                  }
+                },
+                {
+                  "key": "request.operation",
+                  "value": {
+                    "stringValue": "CREATE"
+                  }
+                },
+                {
+                  "key": "deployment.name",
+                  "value": {
+                    "stringValue": "test-app"
+                  }
+                },
+                {
+                  "key": "validation.allowed",
+                  "value": {
+                    "boolValue": true
+                  }
+                }
+              ],
+              "events": [],
+              "links": [],
+              "status": {
+                "code": 0
+              },
+              "childSpanCount": 2
+            },
+            {
+              "traceId": "0af7651916cd43dd8448eb211c80319c",
+              "spanId": "e13d0ad5b2e6f2c0",
+              "parentSpanId": "b7ad6b7169203331",
+              "name": "getTierForNamespace",
+              "kind": 1,
+              "startTimeUnixNano": "1650000000010000000",
+              "endTimeUnixNano": "1650000000020000000",
+              "attributes": [
+                {
+                  "key": "namespace",
+                  "value": {
+                    "stringValue": "test-app-DEV"
+                  }
+                },
+                {
+                  "key": "environment",
+                  "value": {
+                    "stringValue": "DEV"
+                  }
+                },
+                {
+                  "key": "policy.tier",
+                  "value": {
+                    "intValue": 2
+                  }
+                }
+              ],
+              "events": [],
+              "links": [],
+              "status": {
+                "code": 0
+              }
+            },
+            {
+              "traceId": "0af7651916cd43dd8448eb211c80319c",
+              "spanId": "f7ad6b7169203399",
+              "parentSpanId": "b7ad6b7169203331",
+              "name": "policy.validation",
+              "kind": 1,
+              "startTimeUnixNano": "1650000000030000000",
+              "endTimeUnixNano": "1650000000090000000",
+              "attributes": [
+                {
+                  "key": "namespace",
+                  "value": {
+                    "stringValue": "test-app-DEV"
+                  }
+                },
+                {
+                  "key": "deployment.name",
+                  "value": {
+                    "stringValue": "test-app"
+                  }
+                },
+                {
+                  "key": "policy.tier",
+                  "value": {
+                    "intValue": 2
+                  }
+                },
+                {
+                  "key": "policy.code_coverage",
+                  "value": {
+                    "intValue": 82
+                  }
+                },
+                {
+                  "key": "policy.critical_vulnerabilities",
+                  "value": {
+                    "intValue": 0
+                  }
+                },
+                {
+                  "key": "policy.high_vulnerabilities",
+                  "value": {
+                    "intValue": 3
+                  }
+                },
+                {
+                  "key": "policy.build_provenance",
+                  "value": {
+                    "stringValue": "verified"
+                  }
+                },
+                {
+                  "key": "policy.security_scan",
+                  "value": {
+                    "stringValue": "verified"
+                  }
+                },
+                {
+                  "key": "validation.result",
+                  "value": {
+                    "boolValue": true
+                  }
+                },
+                {
+                  "key": "validation.message",
+                  "value": {
+                    "stringValue": ""
+                  }
+                }
+              ],
+              "events": [],
+              "links": [],
+              "status": {
+                "code": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
