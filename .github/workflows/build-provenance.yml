@@ -61,18 +61,22 @@ jobs:
           # In a real implementation, this would validate against your organization's trusted registry
           echo "Validating build provenance from trusted internal source"
           
-          # For demonstration purposes, we'll simulate validation
-          echo "Build provenance validated successfully - from trusted internal source"
+          # Example of checking if the build was performed by a trusted builder
+          TRUSTED_BUILDER="https://github.com/actions/runner"
+          FRONTEND_BUILDER=$(cosign verify-attestation --key internal-trusted-key.pem /tmp/frontend.tar | jq -r '.builder.id')
+          BACKEND_BUILDER=$(cosign verify-attestation --key internal-trusted-key.pem /tmp/backend.tar | jq -r '.builder.id')
           
-          # In a real implementation, you would use cosign to verify attestations
-          # TRUSTED_BUILDER="https://github.com/actions/runner"
-          # FRONTEND_BUILDER=$(cosign verify-attestation --key /path/to/key /tmp/frontend.tar | jq -r '.builder.id')
-          # BACKEND_BUILDER=$(cosign verify-attestation --key /path/to/key /tmp/backend.tar | jq -r '.builder.id')
+          if [[ "$FRONTEND_BUILDER" == "$TRUSTED_BUILDER"* ]] && [[ "$BACKEND_BUILDER" == "$TRUSTED_BUILDER"* ]]; then
+            echo "Build provenance validated successfully"
+          else
+            echo "Build provenance validation failed - not from trusted internal source"
+            exit 1
+          fi
         env:
           COSIGN_EXPERIMENTAL: 1
 
       - name: Upload attestations
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: attestations
           path: |
