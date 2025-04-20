@@ -76,7 +76,7 @@ jobs:
           COSIGN_EXPERIMENTAL: 1
 
       - name: Upload attestations
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: attestations
           path: |
